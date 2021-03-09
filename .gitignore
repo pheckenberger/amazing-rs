@@ -1,0 +1,11 @@
+.settings/
+.sts4-cache/
+target/
+
+.classpath
+.factorypath
+.project
+.springBeans
+application-local.properties
+application-remote.properties
+hs_pid_err*.log
