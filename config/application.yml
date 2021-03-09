@@ -1,0 +1,48 @@
+# --------------------------------------------------------------------------------
+# Logging
+
+logging:
+  level:
+    com.amazing: trace
+    root: warn
+
+# --------------------------------------------------------------------------------
+# Server
+
+#server:#  port: 8080
+#  forward-headers-strategy: framework 
+#  servlet:#    context-path: /
+#  tomcat:#    accesslog:#      enabled: true
+#    basedir: tomcat
+
+# --------------------------------------------------------------------------------
+# Spring
+
+spring:  aop:    proxy-target-class: false
+  datasource:    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres123
+  jackson:    default-property-inclusion: non-null
+  jmx:    enabled: false
+  jpa:    hibernate:      ddl-auto: update
+    open-in-view: false
+    properties:      hibernate.format_sql: true
+    show-sql: true
+
+# --------------------------------------------------------------------------------
+# Application
+
+organization:
+  # Should use for instance {bcrypt} in production 
+  api-reader-password: '{noop}reader123'
+  api-reader-user: reader
+  # Should use for instance {bcrypt} in production 
+  api-writer-password: '{noop}writer123'
+  api-writer-user: writer
+  tree-loader-strategy: greedy
+  init-organization-nodes: true
+  organization-nodes:    root: a,b,c
+    a: e,f
+    b: g,h,i
+    c: j
+    e: k,l,m,n
