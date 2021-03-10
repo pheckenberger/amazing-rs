@@ -1,5 +1,7 @@
 package com.amazing.web.controller;
 
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +11,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.amazing.domain.OrganizationNode;
@@ -39,13 +41,19 @@ public class OrganizationController {
 	}
 
 	@PatchMapping("/{organizationNodeId}/move")
-	ResponseEntity<OrganizationNode> moveOrganizationNode(@PathVariable long organizationNodeId, @RequestParam long newParentNodeId,
-			@AuthenticationPrincipal User user) {
+	ResponseEntity<OrganizationNode> moveOrganizationNode(@PathVariable long organizationNodeId,
+			@RequestBody OrganizationNode newParentNode, @AuthenticationPrincipal User user) {
 
 		log.info("Handling move organization node request: organizationNodeId={}, newParentNodeId={}, user={}", organizationNodeId,
-				newParentNodeId, user.getUsername());
+				newParentNode.getId(), user.getUsername());
 
-		organizationService.moveOrganizationNode(organizationNodeId, newParentNodeId);
+		Optional<OrganizationNode> organizationNodeOpt = organizationService.moveOrganizationNode(organizationNodeId,
+				newParentNode.getId());
+
+		if (!organizationNodeOpt.isPresent()) {
+			return ResponseEntity.of(organizationNodeOpt);
+		}
+
 		return ResponseEntity.ok(null);
 	}
 }

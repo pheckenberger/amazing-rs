@@ -83,6 +83,7 @@ public class OrganizationNode implements Serializable {
 
 		child.setRoot(root);
 		child.setParent(this);
+		child.setHeight(height + 1);
 		children.add(child);
 	}
 
@@ -94,10 +95,11 @@ public class OrganizationNode implements Serializable {
 	public void removeChild(OrganizationNode child) {
 
 		Assert.notNull(child, "Child is null");
-		Assert.isTrue(child.getParent() == this, "Child doesn't belong to this node");
+		Assert.isTrue(equals(child.getParent()), "Child doesn't belong to this node");
 
-		child.setRoot(null);
+		child.setRoot(child);
 		child.setParent(null);
+		child.setHeight(0);
 		children.remove(child);
 	}
 }

@@ -12,11 +12,6 @@ import com.amazing.domain.OrganizationNode;
 public interface OrganizationService {
 
 	/**
-	 * Initialize default organization nodes.
-	 */
-	void initOrganizationNodes();
-
-	/**
 	 * Find organization node with all descendants.
 	 * 
 	 * @param organizationNodeId the organization node ID
@@ -25,10 +20,16 @@ public interface OrganizationService {
 	Optional<OrganizationNode> findOrganizationNode(long organizationNodeId);
 
 	/**
+	 * Initialize default organization nodes.
+	 */
+	void initOrganizationNodes();
+
+	/**
 	 * Move organization node.
 	 * 
 	 * @param organizationNodeId the organization node ID
 	 * @param newParentNodeId the new parent node ID
+	 * @return the optional organization node, not <code>null</code>
 	 */
-	void moveOrganizationNode(long organizationNodeId, long newParentNodeId);
+	Optional<OrganizationNode> moveOrganizationNode(long organizationNodeId, long newParentNodeId);
 }

@@ -81,8 +81,50 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 	@Override
 	@Transactional
-	public void moveOrganizationNode(long organizationId, long newParentNodeId) {
+	public Optional<OrganizationNode> moveOrganizationNode(long organizationNodeId, long newParentNodeId) {
 
-		// TODO Auto-generated method stub
+		Optional<OrganizationNode> organizationNodeOpt = organizationNodeRepository.findById(organizationNodeId);
+		if (organizationNodeOpt.isPresent()) {
+
+			OrganizationNode organizationNode = organizationNodeOpt.get();
+			if (organizationNode.getParent() == null) {
+				throw new UnsupportedOperationException("Unable to move root node");
+			}
+
+			Optional<OrganizationNode> newParentNodeOpt = organizationNodeRepository.findById(newParentNodeId);
+			if (!newParentNodeOpt.isPresent()) {
+				throw new IllegalArgumentException("New organization parent node is missing: " + newParentNodeId);
+			}
+
+			OrganizationNode newParentNode = newParentNodeOpt.get();
+			if (isDescendant(organizationNode, newParentNode)) {
+				throw new IllegalArgumentException("Unable to move to own descendant: " + organizationNodeId);
+			}
+
+			organizationNode.getParent().removeChild(organizationNode);
+			newParentNode.addChild(organizationNode);
+
+			organizationNodeRepository.save(organizationNode);
+		}
+
+		return organizationNodeOpt;
+	}
+
+	/**
+	 * Check whether other organization node is a descendant of the organization node.
+	 * 
+	 * @param organizationNode the organization node, not <code>null</code>
+	 * @param otherOrganizationNode the orher organization node, not <code>null</code>
+	 * @return
+	 */
+	private boolean isDescendant(OrganizationNode organizationNode, OrganizationNode otherOrganizationNode) {
+
+		if (otherOrganizationNode.getParent() == null) {
+			return false;
+		} else if (organizationNode.equals(otherOrganizationNode)) {
+			return true;
+		}
+
+		return isDescendant(organizationNode, otherOrganizationNode.getParent());
 	}
 }
