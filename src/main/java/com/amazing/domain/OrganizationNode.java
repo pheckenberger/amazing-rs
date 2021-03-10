@@ -26,6 +26,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Organization node.
@@ -38,6 +39,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class OrganizationNode implements Serializable {
 
 	/** Serial */
@@ -46,8 +48,10 @@ public class OrganizationNode implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@EqualsAndHashCode.Include
+	@ToString.Include
 	private Long id;
 	@Column(length = 200, nullable = false)
+	@ToString.Include
 	private String name;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_organization_root"))
@@ -58,7 +62,8 @@ public class OrganizationNode implements Serializable {
 	@JsonIgnore
 	private OrganizationNode parent;
 	@Column(nullable = false)
-	private Integer height;
+	@ToString.Include
+	private Integer height = 0;
 	@OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
 	private List<OrganizationNode> children;
 

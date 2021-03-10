@@ -3,7 +3,6 @@ package com.amazing.service.impl;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -25,12 +24,9 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class OrganizationServiceImpl implements OrganizationService {
 
-	@Autowired
-	private OrganizationProperties organizationProperties;
-	@Autowired
-	private OrganizationNodeRepository organizationNodeRepository;
-	@Autowired
-	private TreeLoader treeLoader;
+	private final OrganizationProperties organizationProperties;
+	private final OrganizationNodeRepository organizationNodeRepository;
+	private final TreeLoader treeLoader;
 
 	@Override
 	@Transactional(readOnly = true)
@@ -98,7 +94,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 			OrganizationNode newParentNode = newParentNodeOpt.get();
 			if (isDescendant(organizationNode, newParentNode)) {
-				throw new IllegalArgumentException("Unable to move to own descendant: " + organizationNodeId);
+				throw new UnsupportedOperationException("Unable to move under own descendant: " + organizationNodeId);
 			}
 
 			organizationNode.getParent().removeChild(organizationNode);
