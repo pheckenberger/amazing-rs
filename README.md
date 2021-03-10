@@ -15,7 +15,7 @@ Build the docker image:
 spring-boot:build-image -Dmaven.test.skip -Dspring-boot.build-image.imageName=amazing/amazing-rs
 ```
 
-Start or stop the infrastructure using the docker-compose.yml in the base directory:
+Start or stop the infrastructure using the docker-compose.yml in the base directory after building the image:
 ```
 docker-compose up -d
 docker-compose down
