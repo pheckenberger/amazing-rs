@@ -1,7 +1,25 @@
 # Amazing CO - Backend
 
-Create PostgreSQL docker image:  
-`docker run --name 'postgres' -e 'POSTGRES_PASSWORD=postgres123' -p 5432:5432 -d postgres`
+Create PostgreSQL docker image:
+```
+docker pull postgres
+docker run --name 'postgres' -e 'POSTGRES_PASSWORD=postgres123' -p 5432:5432 -d postgres
+```
+
+Run the application:
+- Use the run configuration in the launch folder to run the application from Eclipse/SpringToolSuite.
+- Use the SpringBoot Maven plugin to run the application: `mvn spring-boot:run`
+
+Build the docker image:
+```
+spring-boot:build-image -Dspring-boot.build-image.imageName=springio/gs-spring-boot-docker
+```
+
+Start or stop the infrastructure using the docker-compose.yml in the base directory:
+```
+docker-compose up -d
+docker compose down
+```
 
 Sample fetches:
 ```
