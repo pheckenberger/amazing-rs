@@ -18,7 +18,7 @@ spring-boot:build-image -Dspring-boot.build-image.imageName=springio/gs-spring-b
 Start or stop the infrastructure using the docker-compose.yml in the base directory:
 ```
 docker-compose up -d
-docker compose down
+docker-compose down
 ```
 
 Sample fetches:
