@@ -1,4 +1,4 @@
-package com.amazing.util;
+package com.amazing.support;
 
 /**
  * Enumeration of tree loader strategies.

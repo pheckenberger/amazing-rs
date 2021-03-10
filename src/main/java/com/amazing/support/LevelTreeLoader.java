@@ -1,4 +1,4 @@
-package com.amazing.util;
+package com.amazing.support;
 
 import java.util.Collections;
 import java.util.List;

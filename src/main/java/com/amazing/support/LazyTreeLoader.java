@@ -1,4 +1,4 @@
-package com.amazing.util;
+package com.amazing.support;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

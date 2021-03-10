@@ -12,7 +12,7 @@ import com.amazing.config.OrganizationProperties;
 import com.amazing.domain.OrganizationNode;
 import com.amazing.repository.OrganizationNodeRepository;
 import com.amazing.service.OrganizationService;
-import com.amazing.util.TreeLoader;
+import com.amazing.support.TreeLoader;
 
 import lombok.RequiredArgsConstructor;
 

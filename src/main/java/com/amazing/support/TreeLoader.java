@@ -1,4 +1,4 @@
-package com.amazing.util;
+package com.amazing.support;
 
 import com.amazing.domain.OrganizationNode;
 

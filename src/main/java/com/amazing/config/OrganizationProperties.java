@@ -3,7 +3,7 @@ package com.amazing.config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.util.MultiValueMap;
 
-import com.amazing.util.TreeLoaderStrategy;
+import com.amazing.support.TreeLoaderStrategy;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
