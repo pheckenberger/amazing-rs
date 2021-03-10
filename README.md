@@ -12,7 +12,7 @@ Run the application:
 
 Build the docker image:
 ```
-spring-boot:build-image -Dspring-boot.build-image.imageName=springio/gs-spring-boot-docker
+spring-boot:build-image -Dmaven.test.skip -Dspring-boot.build-image.imageName=springio/gs-spring-boot-docker
 ```
 
 Start or stop the infrastructure using the docker-compose.yml in the base directory:

@@ -1,8 +1,8 @@
 version: '3'
 services:
-  postgres:
-    container_name: postgres
-    hostname: postgres
+  amazing-db:
+    container_name: amazing-db
+    hostname: amazing-db
     image: postgres:latest
     environment:
     - POSTGRES_PASSWORD=postgres123
@@ -10,13 +10,12 @@ services:
     - "5432:5432"
 
   amazing-rs:
-    container_name: amazing/amazing-rs
+    container_name: amazing-rs
     hostname: amazing-rs
     image: amazing/amazing-rs:latest
-    restart: always
     depends_on:
-    - postgres
+    - amazing-db
     environment:
-    - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/postgres
+    - SPRING_DATASOURCE_URL=jdbc:postgresql://amazing-db:5432/postgres
     ports:
     - "8080:8080"
