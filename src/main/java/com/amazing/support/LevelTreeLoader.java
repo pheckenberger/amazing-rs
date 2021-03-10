@@ -38,7 +38,7 @@ public class LevelTreeLoader implements TreeLoader {
 		List<OrganizationNode> currentLevel = Collections.singletonList(organizationNode);
 		MultiValueMap<OrganizationNode, OrganizationNode> relationships = new LinkedMultiValueMap<>();
 
-		loadLevelRecursively(currentLevel, 1, relationships);
+		loadLevelRecursively(currentLevel, 0, relationships);
 
 		return rebuildSubtreeRecursively(organizationNode, relationships);
 	}
@@ -47,10 +47,10 @@ public class LevelTreeLoader implements TreeLoader {
 	 * Load level.
 	 * 
 	 * @param currentLevel the currentt level
-	 * @param relativeLevel the relative level
+	 * @param relativeHeight the relative height
 	 * @param relationships the map of organization node relationships
 	 */
-	private void loadLevelRecursively(List<OrganizationNode> currentLevel, int relativeLevel,
+	private void loadLevelRecursively(List<OrganizationNode> currentLevel, int relativeHeight,
 			MultiValueMap<OrganizationNode, OrganizationNode> relationships) {
 
 		if (CollectionUtils.isEmpty(currentLevel)) {
@@ -58,15 +58,15 @@ public class LevelTreeLoader implements TreeLoader {
 		}
 
 		List<OrganizationNode> nextLevel = organizationNodeRepository.findAllByParentIn(currentLevel);
-		log.debug("Level tree loader has loaded level: relativeLevel={}, nextLevelNodeCount={}", relativeLevel, nextLevel.size());
+		log.debug("Level tree loader has loaded level: relativeHeight={}, nextLevelNodeCount={}", relativeHeight, nextLevel.size());
 
 		nextLevel.stream().forEach(o -> relationships.add(o.getParent(), o));
 
-		loadLevelRecursively(nextLevel, relativeLevel + 1, relationships);
+		loadLevelRecursively(nextLevel, relativeHeight + 1, relationships);
 	}
 
 	/**
-	 * Rebuild subtree recursively.
+	 * Rebuild subtree recursively to avoid lazy loading problems outside the transaction.
 	 * 
 	 * @param organizationNode the organization node
 	 * @return the rebuilt organization node

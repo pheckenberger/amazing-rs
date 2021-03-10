@@ -81,7 +81,7 @@ public class GreedyTreeLoader implements TreeLoader {
 	}
 
 	/**
-	 * Rebuild subtree recursively.
+	 * Rebuild subtree recursively to avoid lazy loading problems outside the transaction.
 	 * 
 	 * @param organizationNodeId the organization node ID
 	 * @param relationshipCache the relationship cache
