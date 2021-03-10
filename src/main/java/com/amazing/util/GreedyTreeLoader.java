@@ -21,7 +21,7 @@ import com.amazing.repository.OrganizationNodeRepository;
 import com.amazing.vo.OrganizationNodeRelationship;
 
 /**
- * Greedy tree loader.
+ * Greedy tree loader. Loads descendants using a sane superset of the organization node candidates. Expected query count is O(1).
  * 
  * @author hp
  */
@@ -36,20 +36,20 @@ public class GreedyTreeLoader implements TreeLoader {
 	private OrganizationNodeRepository organizationNodeRepository;
 
 	/**
-	 * Collect descendants.
+	 * Collect descendant IDs to load recursively.
 	 * 
 	 * @param id the id
 	 * @param relationshipCache the relationshipcache
 	 * @param idsToLoad the set of IDs to load, which is populated by this method
 	 */
-	private void collectDescendantsToLoad(long id, MultiValueMap<Long, Long> relationshipCache, Set<Long> idsToLoad) {
+	private void collectDescendantIdsToLoadRecursively(long id, MultiValueMap<Long, Long> relationshipCache, Set<Long> idsToLoad) {
 
 		idsToLoad.add(id);
 
 		List<Long> childIds = relationshipCache.get(id);
 		if (!CollectionUtils.isEmpty(childIds)) {
 			for (Long childId : childIds) {
-				collectDescendantsToLoad(childId, relationshipCache, idsToLoad);
+				collectDescendantIdsToLoadRecursively(childId, relationshipCache, idsToLoad);
 			}
 		}
 	}
@@ -60,31 +60,35 @@ public class GreedyTreeLoader implements TreeLoader {
 		log.info("Loading descendants with greedy strategy");
 
 		// First query fetches all relationship candidates
+
 		List<OrganizationNodeRelationship> relationships = organizationNodeRepository
 				.findAllRelationshipsByHeightGreaterThan(organizationNode.getHeight());
+
+		log.debug("Greedy tree loader has loaded relationships: count={}", relationships.size());
 
 		MultiValueMap<Long, Long> relationshipCache = new LinkedMultiValueMap<>();
 		relationships.stream().forEach(r -> relationshipCache.add(r.getParentId(), r.getChildId()));
 
 		Set<Long> idsToLoad = new HashSet<>();
-		collectDescendantsToLoad(organizationNode.getId(), relationshipCache, idsToLoad);
+		collectDescendantIdsToLoadRecursively(organizationNode.getId(), relationshipCache, idsToLoad);
 
 		// Second query fetches all subtree nodes
+
 		Map<Long, OrganizationNode> subtreeNodeCache = organizationNodeRepository.findAllById(idsToLoad).stream()
 				.collect(Collectors.toMap(OrganizationNode::getId, Function.identity()));
 
-		return rebuildSubtree(organizationNode.getId(), relationshipCache, subtreeNodeCache);
+		return rebuildSubtreeRecursively(organizationNode.getId(), relationshipCache, subtreeNodeCache);
 	}
 
 	/**
-	 * Rebuild subtree.
+	 * Rebuild subtree recursively.
 	 * 
 	 * @param organizationNodeId the organization node ID
 	 * @param relationshipCache the relationship cache
 	 * @param subtreeNodeCache the subtree node cache
 	 * @return the rebuilt organization node
 	 */
-	private OrganizationNode rebuildSubtree(long organizationNodeId, MultiValueMap<Long, Long> relationshipCache,
+	private OrganizationNode rebuildSubtreeRecursively(long organizationNodeId, MultiValueMap<Long, Long> relationshipCache,
 			Map<Long, OrganizationNode> subtreeNodeCache) {
 
 		OrganizationNode organizationNode = subtreeNodeCache.get(organizationNodeId);
@@ -97,7 +101,7 @@ public class GreedyTreeLoader implements TreeLoader {
 		List<Long> childIds = relationshipCache.get(organizationNodeId);
 		if (!CollectionUtils.isEmpty(childIds)) {
 			for (Long childId : childIds) {
-				clone.addChild(rebuildSubtree(childId, relationshipCache, subtreeNodeCache));
+				clone.addChild(rebuildSubtreeRecursively(childId, relationshipCache, subtreeNodeCache));
 			}
 		}
 

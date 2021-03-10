@@ -26,7 +26,7 @@ spring:  aop:    proxy-target-class: false
   jmx:    enabled: false
   jpa:    hibernate:      ddl-auto: update
     open-in-view: false
-    properties:      hibernate.format_sql: true
+#    properties:#      hibernate.format_sql: true
     show-sql: true
 
 # --------------------------------------------------------------------------------
@@ -39,7 +39,7 @@ organization:
   # Should use for instance {bcrypt} in production 
   api-writer-password: '{noop}writer123'
   api-writer-user: writer
-  tree-loader-strategy: greedy
+  tree-loader-strategy: level
   init-organization-nodes: true
   organization-nodes:    root: a,b,c
     a: e,f

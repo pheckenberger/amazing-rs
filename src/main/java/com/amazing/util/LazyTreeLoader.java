@@ -9,7 +9,7 @@ import org.springframework.util.CollectionUtils;
 import com.amazing.domain.OrganizationNode;
 
 /**
- * Lazy tree loader.
+ * Lazy tree loader. Loads children node by node, which is the slowest strategy using the most database queries: O(n)
  * 
  * @author hp
  */
@@ -24,21 +24,21 @@ public class LazyTreeLoader implements TreeLoader {
 	public OrganizationNode loadDescendants(OrganizationNode organizationNode) {
 
 		log.info("Loading descendants with the lazy strategy");
-		loadChildren(organizationNode);
+		loadChildrenRecursively(organizationNode);
 
 		return organizationNode;
 	}
 
 	/**
-	 * Load children.
+	 * Load children recursively.
 	 * 
 	 * @param organizationNode the organization node.
 	 */
-	private void loadChildren(OrganizationNode organizationNode) {
+	private void loadChildrenRecursively(OrganizationNode organizationNode) {
 
 		if (!CollectionUtils.isEmpty(organizationNode.getChildren())) {
 			for (OrganizationNode child : organizationNode.getChildren()) {
-				loadChildren(child);
+				loadChildrenRecursively(child);
 			}
 		}
 	}
