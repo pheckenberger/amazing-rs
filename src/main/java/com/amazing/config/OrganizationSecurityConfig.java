@@ -36,9 +36,9 @@ public class OrganizationSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.httpBasic();
 
-		http.authorizeRequests().mvcMatchers(HttpMethod.GET, "/v1/*").hasAnyRole("READER", "WRITER");
-		http.authorizeRequests().mvcMatchers(HttpMethod.POST, "/v1/*").hasRole("WRITER");
-		http.authorizeRequests().mvcMatchers(HttpMethod.PATCH, "/v1/*").hasRole("WRITER");
-		http.authorizeRequests().mvcMatchers(HttpMethod.DELETE, "/v1/*").hasRole("WRITER");
+		http.authorizeRequests().mvcMatchers(HttpMethod.GET, "/v1/**").hasAnyRole("READER", "WRITER");
+		http.authorizeRequests().mvcMatchers(HttpMethod.POST, "/v1/**").hasRole("WRITER");
+		http.authorizeRequests().mvcMatchers(HttpMethod.PATCH, "/v1/**").hasRole("WRITER");
+		http.authorizeRequests().mvcMatchers(HttpMethod.DELETE, "/v1/**").hasRole("WRITER");
 	}
 }
